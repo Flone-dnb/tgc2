@@ -49,7 +49,7 @@ if(CMAKE_BUILD_TYPE MATCHES "^[Dd]ebug")
 endif()
 
 # Tests.
-set(TESTS_TARGET_NAME tests)
+set(TESTS_TARGET_NAME tgc_tests)
 add_executable(${TESTS_TARGET_NAME}
     tests/main.cpp
     # add your test .cpp files here
