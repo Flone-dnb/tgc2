@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.8)
 
 project(tgc CXX) # also change name in Doxyfile (if changing)
 
@@ -29,7 +29,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC src)
 
 # more warnings
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    target_compile_options(${PROJECT_NAME} PUBLIC /W4)
+    target_compile_options(${PROJECT_NAME} PUBLIC /W3 /WX)
 else()
     target_compile_options(${PROJECT_NAME} PUBLIC -Wall -Wextra -Werror)
 endif()

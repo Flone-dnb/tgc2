@@ -120,7 +120,7 @@ struct ArrayTest {
         (*b)[0] = gc_new<rc>();
         b[1] = gc_new<rc>();
 
-        b->find(1);
+        auto it = b->find(1);
         bar(b);
     }
     void bar(gc_map<int, rc> cc) { cc->insert(std::make_pair(1, gc_new<rc>())); }
