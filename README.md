@@ -79,7 +79,6 @@ Fork of [crazybie/tgc2](https://github.com/crazybie/tgc2).
 Prerequisites:
 - compiler that supports C++17
 - [CMake](https://cmake.org/download/)
-- [Doxygen](https://doxygen.nl/download.html)
 
 First, clone this repository:
 
