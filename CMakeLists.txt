@@ -25,6 +25,7 @@ set(PROJECT_SOURCES
 
 # Target.
 add_library(${PROJECT_NAME} STATIC ${PROJECT_SOURCES})
+target_include_directories(${PROJECT_NAME} PUBLIC src)
 
 # more warnings
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
@@ -54,7 +55,5 @@ add_executable(${TESTS_TARGET_NAME}
     # add your test .cpp files here
 )
 target_link_libraries(${TESTS_TARGET_NAME} PRIVATE ${PROJECT_NAME})
-
-include_directories(src)
 
 message(STATUS "${PROJECT_NAME} is configured to use the following C++ standard: ${CMAKE_CXX_STANDARD}")
