@@ -48,12 +48,16 @@ if(CMAKE_BUILD_TYPE MATCHES "^[Dd]ebug")
     endif()
 endif()
 
-# Tests.
-set(TESTS_TARGET_NAME tgc_tests)
-add_executable(${TESTS_TARGET_NAME}
-    tests/main.cpp
-    # add your test .cpp files here
-)
-target_link_libraries(${TESTS_TARGET_NAME} PRIVATE ${PROJECT_NAME})
+option(tgc_BUILD_TEST "Build tgc tests" OFF)
+
+if (tgc_BUILD_TEST)
+    # Tests.
+    set(TESTS_TARGET_NAME tgc_tests)
+    add_executable(${TESTS_TARGET_NAME}
+        tests/main.cpp
+        # add your test .cpp files here
+    )
+    target_link_libraries(${TESTS_TARGET_NAME} PRIVATE ${PROJECT_NAME})
+endif()
 
 message(STATUS "${PROJECT_NAME} is configured to use the following C++ standard: ${CMAKE_CXX_STANDARD}")
