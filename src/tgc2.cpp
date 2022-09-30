@@ -395,7 +395,7 @@ namespace tgc2 {
 
             // Add to output.
             sOutput += "[alive objects   ]: " + std::to_string(iAliveObjectsCount) + "\n";
-            sOutput += "[last freed count]: " + std::to_string(freeObjCntOfPrevGc) + "\n";
+            sOutput += "[last freed count]: " + std::to_string(freeObjCntOfPrevGc);
 
             return sOutput;
         }
