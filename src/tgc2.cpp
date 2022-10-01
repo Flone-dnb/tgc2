@@ -1,6 +1,7 @@
 #include "tgc2.h"
 
 #include <algorithm>
+#include <stdexcept>
 
 #ifdef _WIN32
 #include <crtdbg.h>
@@ -69,6 +70,11 @@ namespace tgc2 {
             auto* c = Collector::inst ? Collector::inst : Collector::get();
             c->tryRegisterToClass(this);
             meta = c->globalFindOwnerMeta(obj);
+            if (!meta) {
+                throw std::runtime_error("unable to construct gc pointer, this usually happens when you "
+                                         "are trying to construct a gc pointer from a raw pointer, this "
+                                         "is not supported");
+            }
             writeBarrier();
         }
 
