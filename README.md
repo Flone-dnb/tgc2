@@ -56,32 +56,35 @@ TODO:
 - does not support multiple inheritance
 - can customize the condition of a full garbage collection
 
-# Multithreading
-- The single-threaded version (enabled by default) should be much faster than the multi-threaded version because no locks are required at all. Please define `TGC_MULTI_THREADED` before including the library to enable the multi-threaded version like so:
+# Multi-threading
+The single-threaded version (enabled by default) should be much faster than the multi-threaded version because no locks are required at all. Please define `TGC_MULTI_THREADED` before including the library to enable the multi-threaded version like so:
+
 ```C++
 #define TGC_MULTI_THREADED
 #include "tgc2.h"
 ```
-- For the multi-threaded version, the collection function (`gc_collector()->collect()`) should be invoked from the main thread therefore the destructors can be triggered in the main thread as well.
+
+For the multi-threaded version, the collection function (`gc_collector()->collect()`) should be invoked from the main thread therefore the destructors can be triggered in the main thread as well.
 
 # Containers
 
-- To make objects in proper tracing chain, **you must use GC wrappers of STL containers instead**, otherwise, memory leaks may occur. Example:
+To make objects in proper tracing chain, **you must use GC wrappers of STL containers instead**, otherwise, memory leaks may occur. Example:
 
 ```C++
 std::vector<gc<T>> myBadArray; // don't do that
 gc_vector<T> myGoodArray = gc_new_array<T>(); // do that
 ```
 
-- Here is the list of STL wrappers for storing `gc` pointers:
+Here is the list of STL wrappers for storing `gc` pointers:
     - `gc_vector` for `std::vector`,
     - `gc_map` for `std::map`,
     - `gc_unordered_map` for `std::unordered_map`,
     - `gc_deque` for `std::deque`,
     - `gc_list` for `std::list`,
     - `gc_set` for `std::set`,
-    - `gc_unordered_set` for `std::unordered_set`,
-- There is also a `std::function` wrapper `gc_function` if you want to capture `gc` pointers in it:
+    - `gc_unordered_set` for `std::unordered_set`.
+
+There is also a `std::function` wrapper `gc_function` if you want to capture `gc` pointers in it:
 
 ```C++
 {
@@ -94,8 +97,8 @@ gc_collector()->collect(); // cleaned everything up correctly
 
 # Casting
 
-- for `std::static_cast` use `gc_static_pointer_cast<To>(pFrom)`,
-- for `std::dynamic_cast` use `gc_dynamic_pointer_cast<To>(pFrom)`, example:
+- use `gc_static_pointer_cast<To>(pFrom)` for `std::static_cast`,
+- use `gc_dynamic_pointer_cast<To>(pFrom)` for `std::dynamic_cast`, example:
 
 ```C++
 gc<ParentClass> pParent = gc_new<ParentClass>();
