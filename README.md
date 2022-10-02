@@ -4,6 +4,23 @@ A tiny, precise, generational, mark & sweep, Garbage Collector for C++.
 
 Fork of [crazybie/tgc2](https://github.com/crazybie/tgc2).
 
+What is changed in this fork:
+- CMake is used instead of Visual Studio project files,
+- better documentation,
+- add `clang-format` for automatic file formatting,
+- added functions:
+    - `gc_collector()->getStats()` - like `gc_collector()->dumpStats()` but returns a string with most important information,
+    - `gc_collector()->getAliveObjectsCount()` - returns the number of currently alive `gc` objects (not pointers) (that were created via `gc_new`),
+    - `gc_collector()->getLastFreedObjectsCount()` - returns the number of last freed `gc` objects (not pointers) (since last `collect` call).
+
+TODO:
+- more usage documentation,
+- use `Catch2` for tests and add more tests,
+- add `clang-tidy`
+- add `doxygen` and cover all code with the documentation,
+- API/architecture imrovements,
+- add new features/fixes?
+
 # Motivation
 - Scenarios that shared_ptr can't solve, e.g. object dependencies are dynamically constructed with no chance to recognize the usage of shared & weak pointers.
 - Try to make things simpler compared to shared_ptr and Oilpan, e.g. networking programs using callbacks for async io operations heavily.     
@@ -39,6 +56,53 @@ Fork of [crazybie/tgc2](https://github.com/crazybie/tgc2).
 - does not support multiple inheritance
 - can customize the condition of a full garbage collection
 
+# Multithreading
+- The single-threaded version (enabled by default) should be much faster than the multi-threaded version because no locks are required at all. Please define `TGC_MULTI_THREADED` before including the library to enable the multi-threaded version like so:
+```C++
+#define TGC_MULTI_THREADED
+#include "tgc2.h"
+```
+- For the multi-threaded version, the collection function (`gc_collector()->collect()`) should be invoked from the main thread therefore the destructors can be triggered in the main thread as well.
+
+# Containers
+
+- To make objects in proper tracing chain, **you must use GC wrappers of STL containers instead**, otherwise, memory leaks may occur. Example:
+
+```C++
+std::vector<gc<T>> myBadArray; // don't do that
+gc_vector<T> myGoodArray = gc_new_array<T>(); // do that
+```
+
+- Here is the list of STL wrappers for storing `gc` pointers:
+    - `gc_vector` for `std::vector`,
+    - `gc_map` for `std::map`,
+    - `gc_unordered_map` for `std::unordered_map`,
+    - `gc_deque` for `std::deque`,
+    - `gc_list` for `std::list`,
+    - `gc_set` for `std::set`,
+    - `gc_unordered_set` for `std::unordered_set`,
+- There is also a `std::function` wrapper `gc_function` if you want to capture `gc` pointers in it:
+
+```C++
+{
+    auto pObj = gc_new<int>(0);
+    gc_function<void()> gc_callback = [pObj](){};
+}
+
+gc_collector()->collect(); // cleaned everything up correctly
+```
+
+# Casting
+
+- for `std::static_cast` use `gc_static_pointer_cast<To>(pFrom)`,
+- for `std::dynamic_cast` use `gc_dynamic_pointer_cast<To>(pFrom)`, example:
+
+```C++
+gc<ParentClass> pParent = gc_new<ParentClass>();
+gc<ChildClass> pChild = gc_dynamic_pointer_cast<ChildClass>(pParent);
+// you have 2 GC pointers now
+```
+
 # Internals
 - This collector uses the triple color, mark & sweep algorithm internally.    
 - Pointers are constructed as roots by default unless detected as children of other object.
@@ -50,23 +114,7 @@ Fork of [crazybie/tgc2](https://github.com/crazybie/tgc2).
     - Modifying a GC pointer will trigger a GC color adjustment which may not be cheap as well.
 - Each allocation has a few extra space overhead (size of two pointers at most), which is used for memory tracing.
 - Marking & swapping should be much faster than Boehm GC, due to the deterministic pointer management, no scanning inside the memories at all, just iterating pointers registered in the GC.
-- To make objects in proper tracing chain, you must use GC wrappers of STL containers instead, otherwise, memory leaks may occur.
-- gc_vector stores pointers of elements making its storage not continuous as a standard vector, this is necessary for the GC. All wrapped containers of STL stores GC pointers as elements.
 - You can manually call gc_delete to trigger the destructor of an object and let the GC claim the memory automatically. Besides, double free is also safe.
-- For the multi-threaded version, the collection function should be invoked from the main thread therefore the destructors can be triggered in the main thread as well.
-
-# Performance Advice
-- Performance is not the first goal of this library. 
-    - Results from tests, a simple allocation of an integer is about 8~10 slower than standard new(see test), so benchmark your program if GC pointers are heavily used in the performance-critical parts(e.g. VM of another language).
-    - Use the references to GC pointers as much as possible. (e.g. function parameters, see internals section)
-    - Use gc_new_array to get a collectible continuous array for better performance in some special cases (see internals section).
-    - Continuous efforts will be put to optimize the performance at a later time.
-    - Languages with GC built-in prefer to create a huge number of heap objects which will give large pressure to the GC, some languages even use pointer escaping analyzing algorithm to increase the recycling efficiency, but it's not a serious problem to C++ as it has RAII and does not use heap objects everywhere. So the throughput of this triple-color GC should be efficient enough. 
-- For real-time applications:
-    - Static strategy: just call gc_collect with a suitable step count regularly in each frame of the event loop.
-    - Dynamic strategy: you can specify a small step count(default is 255) for one collecting call and time it to see if still has time left to collect again, otherwise do collecting at the next time.    
-- As memories are managed by GC, you can not release them immediately. If you want to get rid of the risk of OOM on some resource-limited system, memories guaranteed to have no pointers in it can be managed by shared_ptrs or raw pointers.
-- The single-threaded version(by default) should be much faster than the multi-threaded version because no locks are required at all. Please define TGC_MULTI_THREADED to enable the multi-threaded version.
 
 # Setup (Build)
 
