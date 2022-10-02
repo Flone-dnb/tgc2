@@ -512,7 +512,7 @@ namespace tgc2 {
 
         // used as std::shared_ptr
         template <typename Derive, typename Base> gc<Derive> gc_dynamic_pointer_cast(gc<Base>& from) {
-            static_assert(is_base_of_v<Base, Derive>, "not support multi-inheritance");
+            static_assert(is_base_of_v<Base, Derive>, "multiple inheritance is not supported");
             gc<Derive> r;
             r.reset(from.getMeta());
             return r;
