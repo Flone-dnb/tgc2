@@ -406,5 +406,18 @@ namespace tgc2 {
             return sOutput;
         }
 
+        size_t Collector::getAliveObjectsCount() {
+            size_t iAliveObjectsCount = 0;
+
+            for (auto i : newGen)
+                if (i->arrayLength)
+                    iAliveObjectsCount += 1;
+            for (auto i : oldGen)
+                if (i->arrayLength)
+                    iAliveObjectsCount += 1;
+
+            return iAliveObjectsCount;
+        }
+
     } // namespace details
 } // namespace tgc2

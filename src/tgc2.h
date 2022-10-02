@@ -408,6 +408,7 @@ namespace tgc2 {
             void collect();
             void dumpStats();
             std::string getStats();
+            size_t getAliveObjectsCount();
             void resetCounters() { newGenGcCount = fullGcCount = 0; }
             size_t getNewGenSize() { return newGen.size(); }
             size_t getOldGenSize() { return oldGen.size(); }
