@@ -98,8 +98,8 @@ gc_collector()->collect(); // cleaned everything up correctly
 
 # Casting
 
-- use `gc_static_pointer_cast<To>(pFrom)` for `std::static_cast`,
-- use `gc_dynamic_pointer_cast<To>(pFrom)` for `std::dynamic_cast`, example:
+- use `gc_static_pointer_cast<To>(pFrom)` for `static_cast`,
+- use `gc_dynamic_pointer_cast<To>(pFrom)` for `dynamic_cast`, example:
 
 ```C++
 gc<ParentClass> pParent = gc_new<ParentClass>();
