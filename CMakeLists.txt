@@ -18,14 +18,14 @@ endif()
 
 # Sources.
 set(PROJECT_SOURCES
-    src/tgc2.h
-    src/tgc2.cpp
+    include/tgc2.h
+    include/tgc2.cpp
     # add your .h/.cpp files here
 )
 
 # Target.
 add_library(${PROJECT_NAME} STATIC ${PROJECT_SOURCES})
-target_include_directories(${PROJECT_NAME} PUBLIC src)
+target_include_directories(${PROJECT_NAME} PUBLIC include)
 
 # more warnings
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
