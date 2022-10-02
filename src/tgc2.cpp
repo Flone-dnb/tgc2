@@ -419,5 +419,7 @@ namespace tgc2 {
             return iAliveObjectsCount;
         }
 
+        size_t Collector::getLastFreedObjectsCount() { return static_cast<size_t>(freeObjCntOfPrevGc); }
+
     } // namespace details
 } // namespace tgc2
