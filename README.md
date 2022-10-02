@@ -77,13 +77,13 @@ gc_vector<T> myGoodArray = gc_new_array<T>(); // do that
 
 Here is the list of STL wrappers for storing `gc` pointers:
 
-    - `gc_vector` for `std::vector`,
-    - `gc_map` for `std::map`,
-    - `gc_unordered_map` for `std::unordered_map`,
-    - `gc_deque` for `std::deque`,
-    - `gc_list` for `std::list`,
-    - `gc_set` for `std::set`,
-    - `gc_unordered_set` for `std::unordered_set`.
+- `gc_vector` for `std::vector`,
+- `gc_map` for `std::map`,
+- `gc_unordered_map` for `std::unordered_map`,
+- `gc_deque` for `std::deque`,
+- `gc_list` for `std::list`,
+- `gc_set` for `std::set`,
+- `gc_unordered_set` for `std::unordered_set`.
 
 There is also a `std::function` wrapper `gc_function` if you want to capture `gc` pointers in it:
 
