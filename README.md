@@ -89,21 +89,21 @@ There is also a `std::function` wrapper `gc_function` if you want to capture `gc
 
 ```C++
 {
-    auto pObj = gc_new<int>(0);
+    auto pObj = tgc2::gc_new<int>(0);
     gc_function<void()> gc_callback = [pObj](){};
 }
 
-gc_collector()->collect(); // cleaned everything up correctly
+tgc2::gc_collector()->collect(); // cleaned everything up correctly
 ```
 
 # Casting
 
-- use `gc_static_pointer_cast<To>(pFrom)` for `static_cast`,
-- use `gc_dynamic_pointer_cast<To>(pFrom)` for `dynamic_cast`, example:
+- use `tgc2::gc_static_pointer_cast<To>(pFrom)` for `static_cast`,
+- use `tgc2::gc_dynamic_pointer_cast<To>(pFrom)` for `dynamic_cast`, example:
 
 ```C++
-gc<ParentClass> pParent = gc_new<ParentClass>();
-gc<ChildClass> pChild = gc_dynamic_pointer_cast<ChildClass>(pParent);
+gc<ParentClass> pParent = tgc2::gc_new<ParentClass>();
+gc<ChildClass> pChild = tgc2::gc_dynamic_pointer_cast<ChildClass>(pParent);
 // you have 2 GC pointers now
 ```
 
