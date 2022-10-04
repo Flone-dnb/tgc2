@@ -371,8 +371,8 @@ namespace tgc2 {
 
         void Collector::dumpStats() {
             printf("========= [gc] ========\n");
-            printf("[newGen meta    ] %lu\n", newGen.size());
-            printf("[oldGen meta    ] %lu\n", oldGen.size());
+            printf("[newGen meta    ] %zu\n", newGen.size());
+            printf("[oldGen meta    ] %zu\n", oldGen.size());
             auto liveCnt = 0;
             for (auto i : newGen)
                 if (i->arrayLength)
