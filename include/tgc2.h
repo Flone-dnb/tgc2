@@ -143,7 +143,7 @@ namespace tgc2 {
             bool hasSubPtrs = true;
 
             ObjMeta(ClassMeta* c, char* o, size_t n)
-                : klass(c), arrayLength(n), scanCountInNewGen(0), color(Color::Black) {}
+                : klass(c), arrayLength(n), color(Color::Black), scanCountInNewGen(0) {}
             ~ObjMeta() {
                 if (arrayLength)
                     destroy();
