@@ -61,12 +61,12 @@ namespace tgc2 {
 
         //////////////////////////////////////////////////////////////////////////
 
-        PtrBase::PtrBase() : isRoot(true), isOld(false) {
+        PtrBase::PtrBase() : isOld(false), isRoot(true) {
             auto* c = Collector::inst ? Collector::inst : Collector::get();
             c->tryRegisterToClass(this);
         }
 
-        PtrBase::PtrBase(void* obj) : isRoot(true), isOld(false) {
+        PtrBase::PtrBase(void* obj) : isOld(false), isRoot(true) {
             auto* c = Collector::inst ? Collector::inst : Collector::get();
             c->tryRegisterToClass(this);
             meta = c->globalFindOwnerMeta(obj);
@@ -371,8 +371,8 @@ namespace tgc2 {
 
         void Collector::dumpStats() {
             printf("========= [gc] ========\n");
-            printf("[newGen meta    ] %llu\n", newGen.size());
-            printf("[oldGen meta    ] %llu\n", oldGen.size());
+            printf("[newGen meta    ] %lu\n", newGen.size());
+            printf("[oldGen meta    ] %lu\n", oldGen.size());
             auto liveCnt = 0;
             for (auto i : newGen)
                 if (i->arrayLength)

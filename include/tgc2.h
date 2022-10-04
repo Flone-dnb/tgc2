@@ -67,6 +67,10 @@ namespace tgc2 {
                 T* ptr;
                 list_iterator_base(T* p) : ptr{p} {}
                 list_iterator_base(const list_iterator_base& r) : ptr{r.ptr} {}
+                list_iterator_base& operator=(const list_iterator_base& r) {
+                    ptr = r.ptr;
+                    return *this;
+                }
                 T* operator*() { return ptr; }
                 T* operator->() { return ptr; }
                 bool operator!=(const list_iterator_base& r) const { return ptr != r.ptr; }
