@@ -10,8 +10,8 @@ What is changed in this fork:
 - add `clang-format` for automatic file formatting,
 - added functions:
     - `gc_collector()->getStats()`: like `gc_collector()->dumpStats()` but returns a string with the most important information,
-    - `gc_collector()->getAliveObjectsCount()`: returns the number of currently alive `gc` objects (not pointers) (that were created via `gc_new`),
-    - `gc_collector()->getLastFreedObjectsCount()`: returns the number of last freed `gc` objects (not pointers) (since last `collect` call).
+    - `gc_collector()->getAliveObjectsCount()`: returns the number of currently alive `gc` objects,
+    - `gc_collector()->getLastFreedObjectsCount()`: returns the number of last freed `gc` objects since last `collect` call.
 
 TODO:
 - more usage documentation,
