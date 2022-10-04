@@ -18,6 +18,7 @@ TODO:
 - use `Catch2` for tests and add more tests,
 - add `clang-tidy`
 - add `doxygen` and cover all code with the documentation,
+- carefully merge everything into one `.hpp` file to make it a single-header library,
 - API/architecture imrovements,
 - add new features/fixes?
 
