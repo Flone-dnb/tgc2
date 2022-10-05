@@ -93,8 +93,10 @@ namespace tgc2 {
         ObjMeta* ClassMeta::newMeta(size_t cnt) {
             auto* c = Collector::inst ? Collector::inst : Collector::get();
 
-            if (c->gcCond && c->gcCond->needMinorGc(c))
-                c->collect();
+            // This garbage collects `ObjMeta` while it is in the `creatingObjs` array
+            // and we then crash because accessing deleted memory.
+            // if (c->gcCond && c->gcCond->needMinorGc(c))
+            //     c->collect();
 
             ObjMeta* meta = nullptr;
             try {
