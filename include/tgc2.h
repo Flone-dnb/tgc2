@@ -233,7 +233,7 @@ namespace tgc2 {
             }
 
             static char* callAlloc(size_t sz) { return alloc ? (char*)alloc(sz) : new char[sz]; }
-            static void callDealloc(void* p) { dealloc ? dealloc(p) : delete[](char*)(p); }
+            static void callDealloc(void* p) { dealloc ? dealloc(p) : delete[] (char*)(p); }
 
             template <typename T> static ClassMeta* get() { return &Holder<T>::inst; }
 
@@ -486,7 +486,7 @@ namespace tgc2 {
             auto* p = (T*)meta->objPtr();
             try {
                 for (; i < len; i++, p++)
-                    new (p) T(forward<Args>(args)...);
+                    new (p) T(std::forward<Args>(args)...);
             } catch (...) {
                 for (auto j = i; j > 0; j--, p--) {
                     p->~T();
@@ -523,11 +523,11 @@ namespace tgc2 {
         }
 
         template <typename T, typename... Args> gc<T> gc_new(Args&&... args) {
-            return gc_new_meta<T>(1, forward<Args>(args)...);
+            return gc_new_meta<T>(1, std::forward<Args>(args)...);
         }
 
         template <typename T, typename... Args> gc<T> gc_new_array(size_t len, Args&&... args) {
-            return gc_new_meta<T>(len, forward<Args>(args)...);
+            return gc_new_meta<T>(len, std::forward<Args>(args)...);
         }
 
         template <typename T> ClassMeta* ClassMeta::getRegistered() {
@@ -547,14 +547,16 @@ namespace tgc2 {
         public:
             gc_function() {}
 
-            template <typename F> gc_function(F&& f) : callable(gc_new_meta<Imp<F>>(1, forward<F>(f))) {}
+            template <typename F> gc_function(F&& f) : callable(gc_new_meta<Imp<F>>(1, std::forward<F>(f))) {}
 
             template <typename F> gc_function& operator=(F&& f) {
-                callable = gc_new_meta<Imp<F>>(1, forward<F>(f));
+                callable = gc_new_meta<Imp<F>>(1, std::forward<F>(f));
                 return *this;
             }
 
-            template <typename... U> R operator()(U&&... a) const { return callable->call(forward<U>(a)...); }
+            template <typename... U> R operator()(U&&... a) const {
+                return callable->call(std::forward<U>(a)...);
+            }
 
             explicit operator bool() const { return (bool)callable; }
             bool operator==(const gc_function& r) const { return callable == r.callable; }
@@ -621,7 +623,7 @@ namespace tgc2 {
         };
 
         template <typename T, typename... Args> gc_vector<T> gc_new_vector(Args&&... args) {
-            return gc_new_meta<vector<gc<T>>>(1, forward<Args>(args)...);
+            return gc_new_meta<vector<gc<T>>>(1, std::forward<Args>(args)...);
         }
 
         template <typename T> void gc_delete(gc_vector<T>& p) {
@@ -672,7 +674,7 @@ namespace tgc2 {
         };
 
         template <typename T, typename... Args> gc_deque<T> gc_new_deque(Args&&... args) {
-            return gc_new_meta<deque<gc<T>>>(1, forward<Args>(args)...);
+            return gc_new_meta<deque<gc<T>>>(1, std::forward<Args>(args)...);
         }
 
         template <typename T> void gc_delete(gc_deque<T>& p) {
@@ -719,7 +721,7 @@ namespace tgc2 {
         };
 
         template <typename T, typename... Args> gc_list<T> gc_new_list(Args&&... args) {
-            return gc_new_meta<list<gc<T>>>(1, forward<Args>(args)...);
+            return gc_new_meta<list<gc<T>>>(1, std::forward<Args>(args)...);
         }
 
         template <typename T> void gc_delete(gc_list<T>& p) {
@@ -781,7 +783,7 @@ namespace tgc2 {
         };
 
         template <typename K, typename V, typename... Args> gc_map<K, V> gc_new_map(Args&&... args) {
-            return gc_new_meta<map<K, gc<V>>>(1, forward<Args>(args)...);
+            return gc_new_meta<map<K, gc<V>>>(1, std::forward<Args>(args)...);
         }
 
         template <typename K, typename V> void gc_delete(gc_map<K, V>& p) {
@@ -844,7 +846,7 @@ namespace tgc2 {
 
         template <typename K, typename V, typename... Args>
         gc_unordered_map<K, V> gc_new_unordered_map(Args&&... args) {
-            return gc_new_meta<unordered_map<K, gc<V>>>(1, forward<Args>(args)...);
+            return gc_new_meta<unordered_map<K, gc<V>>>(1, std::forward<Args>(args)...);
         }
         template <typename K, typename V> void gc_delete(gc_unordered_map<K, V>& p) {
             for (auto& i : *p) {
@@ -890,7 +892,7 @@ namespace tgc2 {
         };
 
         template <typename V, typename... Args> gc_set<V> gc_new_set(Args&&... args) {
-            return gc_new_meta<set<gc<V>>>(1, forward<Args>(args)...);
+            return gc_new_meta<set<gc<V>>>(1, std::forward<Args>(args)...);
         }
 
         template <typename T> void gc_delete(gc_set<T>& p) {
@@ -939,7 +941,7 @@ namespace tgc2 {
         };
 
         template <typename V, typename... Args> gc_unordered_set<V> gc_new_unordered_set(Args&&... args) {
-            return gc_new_meta<unordered_set<gc<V>>>(1, forward<Args>(args)...);
+            return gc_new_meta<unordered_set<gc<V>>>(1, std::forward<Args>(args)...);
         }
 
         template <typename T> void gc_delete(gc_unordered_set<T>& p) {

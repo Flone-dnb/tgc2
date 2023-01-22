@@ -27,7 +27,7 @@ set(PROJECT_SOURCES
 add_library(${PROJECT_NAME} STATIC ${PROJECT_SOURCES})
 target_include_directories(${PROJECT_NAME} PUBLIC include)
 
-# more warnings
+# More warnings.
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     target_compile_options(${PROJECT_NAME} PRIVATE /W3 /WX)
 else()
@@ -41,17 +41,17 @@ target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_${PROJECT_CXX_STANDARD_V
 
 # Enable Address Sanitizer.
 if(CMAKE_BUILD_TYPE MATCHES "^[Dd]ebug")
-    if(NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    if(NOT WIN32)
         message(STATUS "Adding Address Sanitizer flags.")
         set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
         set (CMAKE_LINKER_FLAGS_DEBUG "${CMAKE_LINKER_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
     endif()
 endif()
 
+# Tests.
 option(tgc_BUILD_TEST "Build tgc tests" OFF)
-
 if (tgc_BUILD_TEST)
-    # Tests.
+    # Define tests target.
     set(TESTS_TARGET_NAME tgc_tests)
     add_executable(${TESTS_TARGET_NAME}
         tests/main.cpp
